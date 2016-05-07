@@ -68,9 +68,13 @@ class KarmaBot
     end
   end
 
+  def format_karma_response(thing, karma)
+    "#{thing} has #{karma} karma.\n"
+  end
+
   # Gets the karma scores for every word in a message
   # @param [String] message the message from the bot's event handler
-  # @return [String] a markdown formatted mapping of things -> karma
+  # @return [String] message for the user that queried karma
   def karma_query(message)
     # tokenize the message into an array
     things_array = message.split ' '
@@ -78,11 +82,25 @@ class KarmaBot
     # ignore the /karma bit
     things_array = things_array[1, things_array.size]
 
-    things_array.map! do |t|
-      "#{t} has #{find_karma t} karma."
+    nicks = things_array.select { |t| t =~ /^<@/ }
+
+    things_array -= nicks
+    build_karma_query_response(things_array, nicks)
+  end
+
+  def build_karma_query_response(things, nicks)
+    r = ''
+    unless things.empty?
+      r += "```\n"
+      r += things.map { |t| format_karma_response(t, find_karma(t)) }.join "\n"
+      r += "```\n"
     end
 
-    "```\n" + (things_array - [nil]).join("\n") + "\n```"
+    r += nicks.map do |t|
+      format_karma_response(t, find_karma(t))
+    end.join "\n" unless nicks.empty?
+
+    r
   end
 
   # adds a message handler when someone sends "/karma help"
