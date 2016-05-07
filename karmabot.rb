@@ -6,7 +6,7 @@ class KarmaBot
   attr_accessor :token, :app_id, :bot, :brain
 
   # expects you to set environment variables DISCORD_TOKEN and DISCORD_APP_ID
-  # I used env vars because something something elastic beanstalk.
+  # I used env vars because something something elastic beanstalk. (lol)
   def initialize
     @token = ENV.fetch('DISCORD_TOKEN')
     @app_id = ENV.fetch('DISCORD_APP_ID')
@@ -19,6 +19,8 @@ class KarmaBot
 
     add_increment_handler
     add_decrement_handler
+    add_help_handler
+    add_query_handler
 
     STDERR.puts "My oauth authorization URL is: #{@bot.invite_url}"
   end
@@ -28,11 +30,11 @@ class KarmaBot
   end
 
   def scan_increment(utterance)
-    utterance.scan(/(\S+)\+\+/).flatten
+    utterance.downcase.scan(/(\S+)\+\+/).flatten
   end
 
   def scan_decrement(utterance)
-    utterance.scan(/(\S+)--/).flatten
+    utterance.downcase.scan(/(\S+)--/).flatten
   end
 
   # @param thing [String] the thing you want to change the karma of
@@ -49,6 +51,42 @@ class KarmaBot
 
       @brain[thing]
     end
+  end
+
+  def find_karma(thing)
+    @brain.transaction do
+      @brain[thing.downcase] || 0
+    end
+  end
+
+  def karma_query(things)
+    # tokenize the message into an array
+    things_array = things.split ' '
+
+    # ignore the /karma bit
+    things_array = things_array[1, things.size]
+
+    things_array.map! do |t|
+      "#{t} has #{find_karma t} karma."
+    end
+
+    things_array - [nil]
+  end
+
+  def add_help_handler
+    @bot.message(start_with: '/karma help') do |e|
+      e.respond '/karma THING - tells you how much karma THING has.'
+      e.respond "THING++ (anywhere in a message) increment THING's karma"
+      e.respond "THING-- (anywhere in a message) decrement THING's karma"
+    end
+  end
+
+  def add_query_handler
+    @bot.message(start_with: '/karma') do |e|
+      karma_query(e.message.content).each { |m| e.respond m } unless 'help' == e.message.content.split(' ')[1]
+    end
+
+    nil
   end
 
   def add_increment_handler
