@@ -100,7 +100,7 @@ class KarmaBot
       format_karma_response(t, find_karma(t))
     end.join "\n" unless nicks.empty?
 
-    r
+    r.chomp
   end
 
   # adds a message handler when someone sends "/karma help"
