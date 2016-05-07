@@ -1,6 +1,5 @@
 require 'discordrb'
 require 'pstore'
-require 'pry'
 
 # This is a simple karmabot, because we have it at work, but not at discord.
 class KarmaBot
