@@ -1,6 +1,8 @@
 This is a simple little karmabot. I've never wrote a discord bot before!
 
 How to make this vr00m:
+-1. have rvm <https://rvm.io/> installed and working
+-1b. have bundler <http://bundler.io/> installed and working
 0. run a close-enough-to-linux OS
 1. Visit this page and get a developer account https://discordapp.com/developers/applications/me
 2. `export DISCORD_TOKEN="the token you got on that page under 'app bot user'"`

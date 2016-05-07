@@ -1,4 +1,4 @@
-# A sample Gemfile
+# A "production" Gemfile
 source "https://rubygems.org"
 
 gem 'discordrb'
