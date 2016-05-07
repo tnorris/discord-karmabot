@@ -1,0 +1,18 @@
+language: ruby
+
+# Opt-in for container-based builds.
+sudo: false
+
+cache:
+  bundler: true
+
+rvm:
+  - 2.1.6
+
+install: bundle install --jobs=3 --retry=3 --without nerds
+
+script:
+  - bundle exec rubocop --config
+
+# one day...
+#  - bundle exec rspec
