@@ -82,7 +82,7 @@ class KarmaBot
       "#{t} has #{find_karma t} karma."
     end
 
-    "```\n" + (things_array - [nil]) + "\n```"
+    "```\n" + (things_array - [nil]).join("\n") + "\n```"
   end
 
   # adds a message handler when someone sends "/karma help"
