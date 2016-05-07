@@ -98,9 +98,9 @@ class KarmaBot
   # "/karma <THING> [<THING> [<THING> [...]]]"
   def add_query_handler
     @bot.message(start_with: '/karma') do |e|
-      karma_query(e.message.content).each do |m|
-        e.respond m
-      end unless 'help' == e.message.content.split(' ')[1]
+      unless 'help' == e.message.content.split(' ')[1]
+        e.respond karma_query(e.message.content)
+      end
     end
   end
 
