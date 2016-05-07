@@ -9,10 +9,10 @@ cache:
 rvm:
   - 2.1.6
 
-install: bundle install --jobs=3 --retry=3 --without nerds
+install: bundle install --jobs=3 --retry=3
 
 script:
-  - bundle exec rubocop --config
+  - bundle exec rubocop
 
 # one day...
 #  - bundle exec rspec
