@@ -31,14 +31,16 @@ class KarmaBot
   end
 
   # figures out all the things to increment
-  # @param [String] utterance message from user
+  # Stole this from Corbin
+  # @param utterance [String] message from user
   # @return [Array<String>] things that should be incremented
   def scan_increment(utterance)
     utterance.downcase.scan(/(\S+)\+\+/).flatten
   end
 
   # figures out all the things to decrement
-  # @param [String] utterance message from user
+  # Stole this from Corbin
+  # @param utterance [String] message from user
   # @return [Array<String>] things that should be decremented
   def scan_decrement(utterance)
     utterance.downcase.scan(/(\S+)--/).flatten
@@ -68,12 +70,23 @@ class KarmaBot
     end
   end
 
+  # makes a message to send back
+  # @param thing [String] the word
+  # @param karam [Integer] the amount of karma thing has
   def format_karma_response(thing, karma)
-    "#{thing} has #{karma} karma.\n"
+    "#{thing} has #{karma} karma."
+  end
+
+  # so you can do stuff like @Chris++ and have it resolve to @Chris#1234
+  # @param word [String] word that might be a nickname
+  # @return [Integer] it's a nickname
+  # @return [nil] it's not a nickname
+  def is_nick?(word)
+    word =~ /^<@[\d+]>$/
   end
 
   # Gets the karma scores for every word in a message
-  # @param [String] message the message from the bot's event handler
+  # @param message [String] the message from the bot's event handler
   # @return [String] message for the user that queried karma
   def karma_query(message)
     # tokenize the message into an array
@@ -82,7 +95,7 @@ class KarmaBot
     # ignore the /karma bit
     things_array = things_array[1, things_array.size]
 
-    nicks = things_array.select { |t| t =~ /^<@/ }
+    nicks = things_array.select { |t| is_nick? t }
 
     things_array -= nicks
     build_karma_query_response(things_array, nicks)
