@@ -81,7 +81,7 @@ class KarmaBot
   # @param word [String] word that might be a nickname
   # @return [Integer] it's a nickname
   # @return [nil] it's not a nickname
-  def is_nick?(word)
+  def nick?(word)
     word =~ /^<@[\d+]>$/
   end
 
@@ -95,7 +95,7 @@ class KarmaBot
     # ignore the /karma bit
     things_array = things_array[1, things_array.size]
 
-    nicks = things_array.select { |t| is_nick? t }
+    nicks = things_array.select { |t| nick? t }
 
     things_array -= nicks
     build_karma_query_response(things_array, nicks)
