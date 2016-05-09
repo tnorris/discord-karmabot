@@ -14,3 +14,7 @@ How to make this vr00m:
 6b. click 'hell yeah i want this app to get at my servers'
 7. You: @tom++
 8. KarmaBot: @tom's karma increased to -887276834
+
+
+TODO:
+- Tests?
