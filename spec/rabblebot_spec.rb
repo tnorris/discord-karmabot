@@ -11,11 +11,11 @@ RSpec.describe RabbleBot do
 
   it 'can parse a configuration file' do
     rabble_bot = RabbleBot.new
-    expect{ rabble_bot.load_config }.to_not raise_error
+    expect { rabble_bot.load_config }.to_not raise_error
   end
 
   it 'can create a new object with the Discordrb::Bot mock' do
-    expect{ RabbleBot.new }.to_not raise_error
+    expect { RabbleBot.new }.to_not raise_error
   end
 
   it 'loads plugins' do
