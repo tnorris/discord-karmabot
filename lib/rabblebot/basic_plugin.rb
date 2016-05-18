@@ -1,3 +1,5 @@
+# inherit from this if you're building a plugin. It sets up your brain, the yaml config, and gives you a convenience
+# wrapper for CRUDing the brain
 class BasicPlugin
   attr_accessor :bot, :brain, :config
   def initialize(bot, config)

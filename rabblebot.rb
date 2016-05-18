@@ -15,7 +15,7 @@ class RabbleBot
     @token = ENV.fetch('DISCORD_TOKEN', @config[:DISCORD_TOKEN])
     @app_id = ENV.fetch('DISCORD_APP_ID', @config[:DISCORD_APP_ID])
     @bot = Discordrb::Bot.new token: @token, application_id: @app_id
-    @bot.info "The first few characters of the discord token are: #{@token[0,5]}"
+    @bot.info "The first few characters of the discord token are: #{@token[0, 5]}"
     @bot.info "App_id is: #{@app_id}"
   end
 
@@ -33,7 +33,7 @@ class RabbleBot
 
   def load_config
     config_file_path = File.join(File.dirname(File.expand_path(__FILE__)), '/brains/config.yml')
-    @config = YAML::load_file(config_file_path)
+    @config = YAML.load_file(config_file_path)
     # we're using STDERR.puts here because we don't have a logger yet
     STDERR.puts @config
   rescue StandardError => e
@@ -56,6 +56,7 @@ end
 # Monkey Patch .info into Discordrb
 unless Discordrb::Bot.respond_to? :info
   module Discordrb
+    # a discord bot
     class Bot
       def info(message)
         LOGGER.info(message)
