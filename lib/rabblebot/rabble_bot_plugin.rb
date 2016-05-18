@@ -1,4 +1,5 @@
 require 'logger'
+require_relative 'basic_plugin'
 
 class RabbleBot
   # a plugin helper that loads, catalogs, and blacklists plugins

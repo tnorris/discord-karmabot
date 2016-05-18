@@ -1,13 +1,10 @@
 class RabbleBot
   module RabbleBotPlugin
     # a plugin that lets users type stuff like caffeine++
-    class Karma
-      attr_accessor :bot, :brain
-
+    class Karma < BasicPlugin
       def initialize(bot)
-        @bot = bot
+        super(bot)
         @bot.info 'Loading Karma Plugin'
-        @brain = PStore.new('karmabot.pstore')
         add_increment_handler
         add_decrement_handler
         add_help_handler
