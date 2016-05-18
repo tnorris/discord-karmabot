@@ -6,4 +6,5 @@ gem 'discordrb'
 group :nerds do
   gem 'pry'
   gem 'rubocop'
+  gem 'rbnacl'
 end
