@@ -1,4 +1,4 @@
-This is a simple little karmabot. I've never wrote a discord bot before!
+This is a simple little discord bot. I've never wrote a discord bot before! It can do plugins!
 
 How to make this vr00m:
 -1. have rvm <https://rvm.io/> installed and working
@@ -8,7 +8,7 @@ How to make this vr00m:
 2. `export DISCORD_TOKEN="the token you got on that page under 'app bot user'"`
 3. `export DISCORD_APP_ID='the client/application id you got on that page'`
 4. `bundle install --without nerds`
-5. `bundle exec ruby ./karmabot.rb`
+5. `bundle exec ruby ./rabblebot.rb`
 6. look for the line that says "My oauth authroization URL is <thing>
 6a. click that link as hard as you can
 6b. click 'hell yeah i want this app to get at my servers'
