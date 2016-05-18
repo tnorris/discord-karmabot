@@ -1,5 +1,6 @@
 require 'discordrb'
 require 'pstore'
+require 'rbnacl'
 require_relative 'lib/rabblebot/rabble_bot_plugin'
 
 # This is a simple discord bot that supports plugins
@@ -11,13 +12,8 @@ class RabbleBot
   # if running locally set debug to true
   def initialize
     @debug = false
-    if @debug
-      @token = 'DISCORD_TOKEN'
-      @app_id = 'DISCORD_APP_ID'
-    else
-      @token = ENV.fetch('DISCORD_TOKEN')
-      @app_id = ENV.fetch('DISCORD_APP_ID')
-    end
+    @token = ENV.fetch('DISCORD_TOKEN')
+    @app_id = ENV.fetch('DISCORD_APP_ID')
     @bot = Discordrb::Bot.new token: @token, application_id: @app_id
   end
 
