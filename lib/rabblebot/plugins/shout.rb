@@ -13,11 +13,13 @@ class RabbleBot
       end
       
       def shout_help(e)
-        commands = ["/shout cena - HIS NAME IS JOHN CENA!!!\n",
-                    "/shout explosions - Mr. Torgue loves explosions\n",
-                    "/shout tinytinarun - Tiny Tina loves to run.\n",
-                    "/shout tffshout - Shout, Shout, Let it all out.\n"]
-        commands = commands.join()
+        commands = <<-EOT.gsub(/^\s+/, '')
+          **List of shout commands:**
+          /shout cena - HIS NAME IS JOHN CENA!!!
+          /shout explosions - Mr. Torgue loves explosions
+          /shout tinytinarun - Tiny Tina loves to run.
+          /shout tffshout - Shout, Shout, Let it all out.
+        EOT
         e.respond "\n#{commands}"
       end
 
