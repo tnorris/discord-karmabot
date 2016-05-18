@@ -2,7 +2,6 @@ require 'discordrb'
 require 'pstore'
 require 'yaml'
 require_relative 'lib/rabblebot/rabble_bot_plugin'
-require 'pry'
 
 # This is a simple discord bot that supports plugins
 class RabbleBot
