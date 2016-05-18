@@ -16,7 +16,7 @@ class RabbleBot
       end
 
       # adds a message handler that fires when someone sends
-      # "/karma <THING> [<THING> [<THING> [...]]]"
+      # "/example <words>"
       def add_query_handler
         @bot.message(start_with: '/example') do |e|
           @bot.info "Got a message from #{e.message.user.name}: #{e.message.content}"
