@@ -2,8 +2,8 @@ class RabbleBot
   module RabbleBotPlugin
     # a plugin that lets users type stuff like caffeine++
     class Karma < BasicPlugin
-      def initialize(bot)
-        super(bot)
+      def initialize(bot, config)
+        super(bot, config)
         @bot.info 'Loading Karma Plugin'
         add_increment_handler
         add_decrement_handler
