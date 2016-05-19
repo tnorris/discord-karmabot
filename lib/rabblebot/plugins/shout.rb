@@ -23,27 +23,33 @@ class RabbleBot
         e.respond "\n#{commands}"
       end
 
-      def play_shout(e, shout)
-        voicebot = @bot.voice_connect(e.message.author.voice_channel)
-        case shout
-        when 'cena'
-          audio_file = File.expand_path('./shout_includes/cena.mp3', __dir__)
-          e.respond '**HIS NAME IS JOHN CENA!!!**'
+      # TODO: refactor the switch into a config setting, so people can do arbitrary /shout thing -> sound.mp3, quip
+      # by editing a yaml file
+      # TODO: enable rubocop warning when yaml refactor happens
+      # rubocop:disable Metrics/AbcSize
+      def play_shout(e, shout) # rubocop:disable Metrics/MethodLength
+        audio_file, quip = case shout
+                           when 'cena'
+                             [File.expand_path('./shout_includes/cena.mp3', __dir__),
+                              '**HIS NAME IS JOHN CENA!!!**']
+                           when 'explosions'
+                             [File.expand_path('./shout_includes/torgue-explosions.mp3', __dir__),
+                              '**EXPLOSIONS?!**']
+                           when 'tinytinarun'
+                             [File.expand_path('./shout_includes/tinytina-run.mp3', __dir__),
+                              '**Run run run run, run run run run run...**']
+                           when 'tffshout'
+                             [File.expand_path('./shout_includes/tearsforfears-shout.mp3', __dir__),
+                              '**Shout, Shout, Let it all out!**']
+                           else
+                             ['', "I don't know that one.."]
+                           end
+        e.respond quip
+        unless audio_file.empty?
+          voicebot = @bot.voice_connect(e.message.author.voice_channel)
           e.voice.play_file(audio_file)
-        when 'explosions'
-          audio_file = File.expand_path('./shout_includes/torgue-explosions.mp3', __dir__)
-          e.respond '**EXPLOSIONS?!**'
-          e.voice.play_file(audio_file)
-        when 'tinytinarun'
-          audio_file = File.expand_path('./shout_includes/tinytina-run.mp3', __dir__)
-          e.respond '**Run run run run, run run run run run...**'
-          e.voice.play_file(audio_file)
-        when 'tffshout'
-          audio_file = File.expand_path('./shout_includes/tearsforfears-shout.mp3', __dir__)
-          e.respond '**Shout, Shout, Let it all out!**'
-          e.voice.play_file(audio_file)
+          voicebot.destroy
         end
-        voicebot.destroy
       end
 
       def add_shout_handler
