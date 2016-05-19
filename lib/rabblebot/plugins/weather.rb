@@ -4,7 +4,6 @@ require 'json'
 # a weather plugin
 class RabbleBot
   attr_reader :google_api, :forecastio_api
-  
   module RabbleBotPlugin
     # a weather plugin
     class Weather < BasicPlugin
@@ -16,7 +15,7 @@ class RabbleBot
         add_weather_handler
         @bot.info 'Weather Plugin loaded!'
       end
-      
+
       def weather_help(e)
         e.respond '/weather ZIP - tells you what the weather of ZIP is.'
       end
@@ -29,7 +28,7 @@ class RabbleBot
         lat = gmaps_json['results'][0]['geometry']['location']['lat']
         lng = gmaps_json['results'][0]['geometry']['location']['lng']
         forecast_io_url = "https://api.forecast.io/forecast/#{@forecastio_api}/#{lat},#{lng}"
-        forecast_io_response = open('forecast_io_url').read
+        forecast_io_response = open('#{forecast_io_url}').read
         forecast_io_json = JSON.parse(forecast_io_response)
         icon = forecast_io_json['currently']['icon']
         status = forecast_io_json['currently']['summary']
@@ -67,8 +66,8 @@ class RabbleBot
           Status: #{status} #{emoji}
           Temperature: #{temp} F
           Humidity: #{humidity}%
-          Wind Speed: #{windSpeed} mph
-          Cloud Cover: #{cloudCover}%
+          Wind Speed: #{windspeed} mph
+          Cloud Cover: #{cloudcover}%
         EOT
         e.respond response
       end

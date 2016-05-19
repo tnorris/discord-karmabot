@@ -11,7 +11,7 @@ class RabbleBot
         add_shout_handler
         @bot.info 'Shout Plugin loaded!'
       end
-      
+
       def shout_help(e)
         commands = <<-EOT.gsub(/^\s+/, '')
           **List of shout commands:**
