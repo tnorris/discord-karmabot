@@ -14,11 +14,11 @@ You can set the `DISCORD_TOKEN` and `DISCORD_APP_ID` environmetn variables, or y
 2. `cd rabblebot`
 3. `bundle install --without nerds`
 4. `bundle exec ruby ./exe/rabblebot`
-5. look for the line that says "My oauth authroization URL is <thing>
+5. look for the line that says "My oauth authroization URL is: <url>"
 6. click that link as hard as you can
 6. allow the app to use your server
 7. You: @tom++
-8. KarmaBot: @tom's karma increased to -887276834
+8. RabbleBot: @tom's karma increased to -887276834
 
 
 TODO:
