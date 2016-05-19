@@ -22,4 +22,4 @@ You can set the `DISCORD_TOKEN` and `DISCORD_APP_ID` environmetn variables, or y
 
 
 TODO:
-- Tests?
+- Stop a crashing plugin from taking down the whole bot
