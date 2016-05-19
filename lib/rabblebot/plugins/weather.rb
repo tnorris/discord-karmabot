@@ -3,17 +3,25 @@ require 'json'
 
 # a weather plugin
 class RabbleBot
-  attr_reader :google_api, :forecastio_api
+  attr_accessor :google_api, :forecastio_api
   module RabbleBotPlugin
-    # a weather plugin
     class Weather < BasicPlugin
       def initialize(bot, config)
         super(bot, config)
-        @bot.info 'Loading Weather Plugin'
-        @google_api = 'YOUR_GOOGLEAPI_KEY'
-        @forecastio_api = 'YOUR_FORECAST_IO_API_KEY'
+        begin
+          @google_api = ENV.fetch('GOOGLE_API_KEY', @config[:GOOGLE_API_KEY])
+          @forecastio_api = ENV.fetch('FORECAST_IO_KEY', @config[:FORECAST_IO_KEY])
+        rescue StandardError => msg
+          puts <<-EOT
+          ********************* ERROR ************************
+          Weather Plugin Config Error:
+          One of the API keys is missing or incorrect.
+          Check your /brains/config.yml file or ENV variables.
+          Exception: #{msg}
+          ********************* ERROR ************************
+          EOT
+        end
         add_weather_handler
-        @bot.info 'Weather Plugin loaded!'
       end
 
       def weather_help(e)
@@ -21,14 +29,14 @@ class RabbleBot
       end
 
       def weather_query(e, message)
-        gmaps_json_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}"
-        gmaps_json_response = open('#{gmaps_json_url}').read
+        gmaps_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}"
+        gmaps_json_response = open(gmaps_url).read
         gmaps_json = JSON.parse(gmaps_json_response)
         location = gmaps_json['results'][0]['formatted_address']
         lat = gmaps_json['results'][0]['geometry']['location']['lat']
         lng = gmaps_json['results'][0]['geometry']['location']['lng']
-        forecast_io_url = "https://api.forecast.io/forecast/#{@forecastio_api}/#{lat},#{lng}"
-        forecast_io_response = open('#{forecast_io_url}').read
+        forecast_url = "https://api.forecast.io/forecast/#{@forecastio_api}/#{lat},#{lng}"
+        forecast_io_response = open(forecast_url).read
         forecast_io_json = JSON.parse(forecast_io_response)
         icon = forecast_io_json['currently']['icon']
         status = forecast_io_json['currently']['summary']
@@ -38,29 +46,7 @@ class RabbleBot
         windspeed = forecast_io_json['currently']['windSpeed']
         cloudcover = forecast_io_json['currently']['cloudCover'].to_f
         cloudcover = (cloudcover * 100).to_i
-        emoji = ''
-        case icon
-        when 'clear-night', 'clear-day'
-          emoji = ':waxing_gibbous_moon:'
-        when 'partly-cloudy-night', 'partly-cloudy-day'
-          emoji = ':partly_sunny:'
-        when 'rain'
-          emoji = ':cloud_rain:'
-        when 'snow'
-          emoji = ':cloud_snow:'
-        when 'sleet'
-          emoji = ':cloud_rain:'
-        when 'wind'
-          emoji = ':wind_blowing_face:'
-        when 'fog'
-          emoji = ':foggy:'
-        when 'cloudy'
-          emoji = ':cloud:'
-        when 'tornado'
-          emoji = ':cloud_tornado:'
-        when 'thunderstorm'
-          emoji = ':cloud_lightning:'
-        end
+        emoji = ":#{@config[emojis].fetch(icon, 'no emoji')}:"
         response = <<-EOT.gsub(/^\s+/, '')
           *Current Weather for #{location}:*
           Status: #{status} #{emoji}
