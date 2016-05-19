@@ -22,21 +22,23 @@ class RabbleBot
       end
 
       def weather_query(e, message)
-        gmaps_json_response = open("https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}").read
+        gmaps_json_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}"
+        gmaps_json_response = open('#{gmaps_json_url}').read
         gmaps_json = JSON.parse(gmaps_json_response)
         location = gmaps_json['results'][0]['formatted_address']
         lat = gmaps_json['results'][0]['geometry']['location']['lat']
         lng = gmaps_json['results'][0]['geometry']['location']['lng']
-        forecast_io_response = open("https://api.forecast.io/forecast/#{@forecastio_api}/#{lat},#{lng}").read
+        forecast_io_url = "https://api.forecast.io/forecast/#{@forecastio_api}/#{lat},#{lng}"
+        forecast_io_response = open('forecast_io_url').read
         forecast_io_json = JSON.parse(forecast_io_response)
         icon = forecast_io_json['currently']['icon']
         status = forecast_io_json['currently']['summary']
         temp = forecast_io_json['currently']['temperature']
         humidity = forecast_io_json['currently']['humidity'].to_f
         humidity = (humidity * 100).to_i
-        windSpeed = forecast_io_json['currently']['windSpeed']
-        cloudCover = forecast_io_json['currently']['cloudCover'].to_f
-        cloudCover = (cloudCover * 100).to_i
+        windspeed = forecast_io_json['currently']['windSpeed']
+        cloudcover = forecast_io_json['currently']['cloudCover'].to_f
+        cloudcover = (cloudcover * 100).to_i
         emoji = ''
         case icon
         when 'clear-night', 'clear-day'
@@ -60,8 +62,15 @@ class RabbleBot
         when 'thunderstorm'
           emoji = ':cloud_lightning:'
         end
-        r = "\n*Current Weather for #{location}:*\nStatus: #{status} #{emoji}\nTemperature: #{temp} F\nHumidity: #{humidity}%\nWind Speed: #{windSpeed} mph\nCloud Cover: #{cloudCover}%"
-        e.respond r
+        response = <<-EOT.gsub(/^\s+/, '')
+          *Current Weather for #{location}:*
+          Status: #{status} #{emoji}
+          Temperature: #{temp} F
+          Humidity: #{humidity}%
+          Wind Speed: #{windSpeed} mph
+          Cloud Cover: #{cloudCover}%
+        EOT
+        e.respond response
       end
 
       def add_weather_handler
