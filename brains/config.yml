@@ -1,0 +1,24 @@
+:DISCORD_APP_ID: 179
+:DISCORD_TOKEN: MTc5
+weather:
+  :GOOGLE_API_KEY: AIzaS
+  :FORECAST_IO_KEY: 392be
+emojis:
+  clear-night: waxing_gibbous_moon
+  clear-day: waxing_gibbous_moon
+  partly-cloudy-night: partly_sunny
+  partly-cloudy-day: partly_sunny
+  rain: cloud_rain
+  snow: cloud_snow
+  sleet: cloud_rain
+  wind: wind_blowing_face
+  fog: foggy
+  cloudy: cloud
+  tornado: cloud_tornado
+  thunderstorm: cloud_lightning
+example:
+  :a_key: value
+  :a_list:
+  - thing1
+  - thing2
+  - thing3
