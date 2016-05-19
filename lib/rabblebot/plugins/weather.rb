@@ -5,8 +5,10 @@ require 'json'
 class RabbleBot
   attr_accessor :google_api, :forecastio_api
   module RabbleBotPlugin
+    # so you can do /weather kbos
     class Weather < BasicPlugin
-      def initialize(bot, config)
+      # methodlength probably shouldn't be enforced in the initializer..
+      def initialize(bot, config) # rubocop:disable Metrics/MethodLength
         super(bot, config)
         begin
           @google_api = ENV.fetch('GOOGLE_API_KEY', @config[:GOOGLE_API_KEY])
@@ -29,33 +31,41 @@ class RabbleBot
       end
 
       def weather_query(e, message)
+        lat, lng, location = get_location_from_gmaps(message)
+
+        forecast_io_json = get_forecast(lat, lng)
+
+        e.respond build_response(forecast_io_json, location)
+      end
+
+      # i can't shrink the assign/branch/condition down any further without making this method harder to read
+      def build_response(forecast_io_json, location) # rubocop:disable Metrics/AbcSize
+        emoji = ":#{@config['emojis'].fetch(forecast_io_json['currently']['icon'], '(no emoji :( )')}:"
+        <<-EOT.gsub(/^\s+/, '')
+          *Current Weather for #{location}:*
+          Status: #{forecast_io_json['currently']['summary']} #{emoji}
+          Temperature: #{forecast_io_json['currently']['temperature']} F
+          Humidity: #{forecast_io_json['currently']['humidity'].to_f * 100}%
+          Wind Speed: #{forecast_io_json['currently']['windSpeed']} mph
+          Cloud Cover: #{forecast_io_json['currently']['cloudCover'].to_f * 100}%
+        EOT
+      end
+
+      def get_forecast(lat, lng)
+        forecast_url = "https://api.forecast.io/forecast/#{@forecastio_api}/#{lat},#{lng}"
+        forecast_io_response = open(forecast_url).read
+        JSON.parse(forecast_io_response)
+      end
+
+      # ditto about AbcSize here. If I reduce 'complexity' I also reduce clarity.
+      def get_location_from_gmaps(message) # rubocop:disable Metrics/AbcSize
         gmaps_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}"
         gmaps_json_response = open(gmaps_url).read
         gmaps_json = JSON.parse(gmaps_json_response)
         location = gmaps_json['results'][0]['formatted_address']
         lat = gmaps_json['results'][0]['geometry']['location']['lat']
         lng = gmaps_json['results'][0]['geometry']['location']['lng']
-        forecast_url = "https://api.forecast.io/forecast/#{@forecastio_api}/#{lat},#{lng}"
-        forecast_io_response = open(forecast_url).read
-        forecast_io_json = JSON.parse(forecast_io_response)
-        icon = forecast_io_json['currently']['icon']
-        status = forecast_io_json['currently']['summary']
-        temp = forecast_io_json['currently']['temperature']
-        humidity = forecast_io_json['currently']['humidity'].to_f
-        humidity = (humidity * 100).to_i
-        windspeed = forecast_io_json['currently']['windSpeed']
-        cloudcover = forecast_io_json['currently']['cloudCover'].to_f
-        cloudcover = (cloudcover * 100).to_i
-        emoji = ":#{@config[emojis].fetch(icon, 'no emoji')}:"
-        response = <<-EOT.gsub(/^\s+/, '')
-          *Current Weather for #{location}:*
-          Status: #{status} #{emoji}
-          Temperature: #{temp} F
-          Humidity: #{humidity}%
-          Wind Speed: #{windspeed} mph
-          Cloud Cover: #{cloudcover}%
-        EOT
-        e.respond response
+        [lat, lng, location]
       end
 
       def add_weather_handler
