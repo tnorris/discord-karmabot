@@ -31,6 +31,6 @@ RSpec.describe RabbleBot::RabbleBotPlugin::Karma do
 
   it 'finds things to decrement' do
     k = RabbleBot::RabbleBotPlugin::Karma.new(@bot_double, @config_double)
-    expect(k.scan_increment('tom-- tom-- tom--')).to eq(%w(tom tom tom))
+    expect(k.scan_decrement('tom-- tom-- tom--')).to eq(%w(tom tom tom))
   end
 end
