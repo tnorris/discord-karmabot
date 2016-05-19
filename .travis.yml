@@ -13,6 +13,6 @@ install: bundle install --jobs=3 --retry=3
 
 script:
   - bundle exec rubocop
+  - cp brains/config.example.yml brains/config.yml
+  - bundle exec rspec
 
-# one day...
-#  - bundle exec rspec
