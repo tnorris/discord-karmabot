@@ -8,7 +8,6 @@ class RabbleBot
     class Weather < BasicPlugin
       def initialize(bot, config)
         super(bot, config)
-<<<<<<< HEAD
         begin
           @google_api = ENV.fetch('GOOGLE_API_KEY', @config[:GOOGLE_API_KEY])
           @forecastio_api = ENV.fetch('FORECAST_IO_KEY', @config[:FORECAST_IO_KEY])
@@ -22,7 +21,6 @@ class RabbleBot
           ********************* ERROR ************************
           EOT
         end
-=======
         @bot.info 'Loading Weather Plugin'
         puts "my config is: #{@config}"
         @google_api = @config['google_api']
@@ -30,7 +28,6 @@ class RabbleBot
         @bot.info 'My API keys are:'
         @bot.info @google_api
         @bot.info @forecastio_api
->>>>>>> refs/remotes/tnorris/quizy101-master
         add_weather_handler
       end
 
@@ -39,7 +36,6 @@ class RabbleBot
       end
 
       def weather_query(e, message)
-<<<<<<< HEAD
         gmaps_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}"
         gmaps_json_response = open(gmaps_url).read
         gmaps_json = JSON.parse(gmaps_json_response)
@@ -58,7 +54,6 @@ class RabbleBot
         cloudcover = forecast_io_json['currently']['cloudCover'].to_f
         cloudcover = (cloudcover * 100).to_i
         emoji = ":#{@config[emojis].fetch(icon, 'no emoji')}:"
-=======
         gmaps_json_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message.join ' '}&key=#{@google_api}"
         gmaps_json_response = open(gmaps_json_url).read
         begin
@@ -78,7 +73,6 @@ class RabbleBot
 
         emoji = lookup_emoji_for_weather_condition(icon)
 
->>>>>>> refs/remotes/tnorris/quizy101-master
         response = <<-EOT.gsub(/^\s+/, '')
           *Current Weather for #{location}:*
           Status: #{status} #{emoji}
