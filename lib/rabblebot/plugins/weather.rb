@@ -21,13 +21,13 @@ class RabbleBot
       end
 
       def weather_query(e, message)
-        gmaps_json_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}"
+        gmaps_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}"
         gmaps_json_response = open('#{gmaps_json_url}').read
         gmaps_json = JSON.parse(gmaps_json_response)
         location = gmaps_json['results'][0]['formatted_address']
         lat = gmaps_json['results'][0]['geometry']['location']['lat']
         lng = gmaps_json['results'][0]['geometry']['location']['lng']
-        forecast_io_url = "https://api.forecast.io/forecast/#{@forecastio_api}/#{lat},#{lng}"
+        forecast_url = "https://api.forecast.io/forecast/#{@forecastio_api}/#{lat},#{lng}"
         forecast_io_response = open('#{forecast_io_url}').read
         forecast_io_json = JSON.parse(forecast_io_response)
         icon = forecast_io_json['currently']['icon']
@@ -38,29 +38,19 @@ class RabbleBot
         windspeed = forecast_io_json['currently']['windSpeed']
         cloudcover = forecast_io_json['currently']['cloudCover'].to_f
         cloudcover = (cloudcover * 100).to_i
-        emoji = ''
-        case icon
-        when 'clear-night', 'clear-day'
-          emoji = ':waxing_gibbous_moon:'
-        when 'partly-cloudy-night', 'partly-cloudy-day'
-          emoji = ':partly_sunny:'
-        when 'rain'
-          emoji = ':cloud_rain:'
-        when 'snow'
-          emoji = ':cloud_snow:'
-        when 'sleet'
-          emoji = ':cloud_rain:'
-        when 'wind'
-          emoji = ':wind_blowing_face:'
-        when 'fog'
-          emoji = ':foggy:'
-        when 'cloudy'
-          emoji = ':cloud:'
-        when 'tornado'
-          emoji = ':cloud_tornado:'
-        when 'thunderstorm'
-          emoji = ':cloud_lightning:'
-        end
+        icon_table = {'clear-night' => 'sunrise_over_mountains',
+                      'clear-day' => 'waxing_gibbous_moon',
+                      'partly-cloudy-night' => 'partly_sunny',
+                      'partly-cloudy-day' => 'partly_sunny',
+                      'rain' => 'cloud_rain',
+                      'snow' => 'cloud_snow',
+                      'sleet' => 'cloud_rain',
+                      'wind' => 'wind_blowing_face',
+                      'fog' => 'foggy',
+                      'cloudy' => 'cloud',
+                      'tornado' => 'cloud_tornado',
+                      'thunderstorm' => 'cloud_lightning'}
+        emoji = ":#{icon_table.fetch(icon, "no emoji")}:"
         response = <<-EOT.gsub(/^\s+/, '')
           *Current Weather for #{location}:*
           Status: #{status} #{emoji}
