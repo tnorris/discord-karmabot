@@ -13,9 +13,14 @@ class RabbleBot
     load_config
     @token = ENV.fetch('DISCORD_TOKEN', @config[:DISCORD_TOKEN])
     @app_id = ENV.fetch('DISCORD_APP_ID', @config[:DISCORD_APP_ID])
-    @bot = Discordrb::Bot.new token: @token, application_id: @app_id
+    @bot = my_bot
     @bot.info "The first few characters of the discord token are: #{@token[0, 5]}"
     @bot.info "App_id is: #{@app_id}"
+  end
+
+  # a shim for unit testing
+  def my_bot
+    Discordrb::Bot.new token: @token, application_id: @app_id
   end
 
   def load_plugins
@@ -33,11 +38,11 @@ class RabbleBot
   def load_config
     config_file_path = File.join(File.dirname(File.expand_path(__FILE__)), '/brains/config.yml')
     @config = YAML.load_file(config_file_path)
-    # we're using STDERR.puts here because we don't have a logger yet
-    STDERR.puts @config
   rescue StandardError => e
+    # we're using STDERR.puts here because we don't have a logger yet
     STDERR.puts "Couldn't load #{config_file_path}. Error was:"
     STDERR.puts e
+    raise e
   end
 
   # set up the event handlers, spout out an oAuth url
@@ -63,7 +68,3 @@ unless Discordrb::Bot.respond_to? :info
     end
   end
 end
-
-k = RabbleBot.new
-k.bootstrap
-k.run
