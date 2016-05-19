@@ -10,8 +10,12 @@ class RabbleBot
       def initialize(bot, config)
         super(bot, config)
         @bot.info 'Loading Weather Plugin'
+        puts "my config is: #{@config}"
         @google_api = @config['google_api']
         @forecastio_api = @config['forecastio_api']
+        @bot.info 'My API keys are:'
+        @bot.info @google_api
+        @bot.info @forecastio_api
         add_weather_handler
         @bot.info 'Weather Plugin loaded!'
       end
@@ -21,7 +25,7 @@ class RabbleBot
       end
 
       def weather_query(e, message)
-        gmaps_json_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}"
+        gmaps_json_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message.join ' '}&key=#{@google_api}"
         gmaps_json_response = open(gmaps_json_url).read
         begin
           gmaps_json = JSON.parse(gmaps_json_response)
