@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require_relative '../rabblebot'
+
+k = RabbleBot.new
+k.bootstrap
+k.run
