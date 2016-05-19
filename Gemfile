@@ -7,4 +7,5 @@ gem 'rbnacl'
 group :nerds do
   gem 'pry'
   gem 'rubocop'
+  gem 'rspec'
 end
