@@ -36,26 +36,26 @@ class RabbleBot
       end
 
       def weather_query(e, message)
-        gmaps_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}"
-        gmaps_json_response = open(gmaps_url).read
-        gmaps_json = JSON.parse(gmaps_json_response)
-        location = gmaps_json['results'][0]['formatted_address']
-        lat = gmaps_json['results'][0]['geometry']['location']['lat']
-        lng = gmaps_json['results'][0]['geometry']['location']['lng']
-        forecast_url = "https://api.forecast.io/forecast/#{@forecastio_api}/#{lat},#{lng}"
-        forecast_io_response = open(forecast_url).read
-        forecast_io_json = JSON.parse(forecast_io_response)
-        icon = forecast_io_json['currently']['icon']
-        status = forecast_io_json['currently']['summary']
-        temp = forecast_io_json['currently']['temperature']
-        humidity = forecast_io_json['currently']['humidity'].to_f
-        humidity = (humidity * 100).to_i
-        windspeed = forecast_io_json['currently']['windSpeed']
-        cloudcover = forecast_io_json['currently']['cloudCover'].to_f
-        cloudcover = (cloudcover * 100).to_i
-        emoji = ":#{@config[emojis].fetch(icon, 'no emoji')}:"
-        gmaps_json_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message.join ' '}&key=#{@google_api}"
-        gmaps_json_response = open(gmaps_json_url).read
+        # gmaps_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}"
+        # gmaps_json_response = open(gmaps_url).read
+        # gmaps_json = JSON.parse(gmaps_json_response)
+        # location = gmaps_json['results'][0]['formatted_address']
+        # lat = gmaps_json['results'][0]['geometry']['location']['lat']
+        # lng = gmaps_json['results'][0]['geometry']['location']['lng']
+        # forecast_url = "https://api.forecast.io/forecast/#{@forecastio_api}/#{lat},#{lng}"
+        # forecast_io_response = open(forecast_url).read
+        # forecast_io_json = JSON.parse(forecast_io_response)
+        # icon = forecast_io_json['currently']['icon']
+        # status = forecast_io_json['currently']['summary']
+        # temp = forecast_io_json['currently']['temperature']
+        # humidity = forecast_io_json['currently']['humidity'].to_f
+        # humidity = (humidity * 100).to_i
+        # windspeed = forecast_io_json['currently']['windSpeed']
+        # cloudcover = forecast_io_json['currently']['cloudCover'].to_f
+        # cloudcover = (cloudcover * 100).to_i
+        # emoji = ":#{@config[emojis].fetch(icon, 'no emoji')}:"
+        # gmaps_json_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message.join ' '}&key=#{@google_api}"
+        # gmaps_json_response = open(gmaps_json_url).read
         begin
           gmaps_json = JSON.parse(gmaps_json_response)
         rescue StandardError => e
