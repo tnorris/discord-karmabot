@@ -14,12 +14,6 @@ class RabbleBot
     @token = ENV.fetch('DISCORD_TOKEN', @config[:DISCORD_TOKEN])
     @app_id = ENV.fetch('DISCORD_APP_ID', @config[:DISCORD_APP_ID])
     @bot = my_bot
-    begin
-      lsb = File.read('/etc/lsb-release')
-      @bot.encoder.use_avconv = true if lsb =~ /Ubuntu 14.04.4 LTS/
-    rescue StandardError => e
-      nil
-    end
     @bot.info "The first few characters of the discord token are: #{@token[0, 5]}"
     @bot.info "App_id is: #{@app_id}"
   end
