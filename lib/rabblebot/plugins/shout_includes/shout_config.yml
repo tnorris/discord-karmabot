@@ -1,0 +1,17 @@
+shouts:
+  cena:
+    file: ./shout_includes/cena.mp3
+    quip: AND HIS NAME IS JOHN CENA!!!
+    help: The one and only, John Cena.
+  explosions: 
+    file: ./shout_includes/torgue-explosions.mp3
+    quip: EXPLOSIONS?!
+    help: Mr. Torgue loves explosions.
+  tinytinarun:
+    file: ./shout_includes/tinytina-run.mp3
+    quip: Run run run run, run run run run run...
+    help: Tiny Tina loves to run.
+  tffshout:
+    file: ./shout_includes/tearsforfears-shout.mp3
+    quip: Shout, Shout, Let it all out!
+    help: For then you just want to shout, Tears for Fears style.

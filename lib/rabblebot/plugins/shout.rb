@@ -2,63 +2,65 @@ require 'open-uri'
 require 'json'
 
 class RabbleBot
+  # shout plugin
   module RabbleBotPlugin
+    attr_accessor :shout_config, :playing
     # a shout audio plugin
     class Shout < BasicPlugin
       def initialize(bot, config)
         super(bot, config)
+        load_config
         @bot.info 'Loading Shout Plugin'
         add_shout_handler
+        @playing = false
         @bot.info 'Shout Plugin loaded!'
       end
 
+      def load_config
+        config_file_path = File.join(File.dirname(File.expand_path(__FILE__)), '/shout_includes/shout_config.yml')
+        @shout_config = YAML.load_file(config_file_path)
+      rescue StandardError => e
+        # we're using STDERR.puts here because we don't have a logger yet
+        STDERR.puts "Couldn't load #{config_file_path}. Error was:"
+        STDERR.puts e
+        raise e
+      end
+
       def shout_help(e)
+        help_text = ''
+        @shout_config['shouts'].each do |k, v|
+          help_text += "/shout #{k} - #{v['help']}\n"
+        end
         commands = <<-EOT.gsub(/^\s+/, '')
           **List of shout commands:**
-          /shout cena - HIS NAME IS JOHN CENA!!!
-          /shout explosions - Mr. Torgue loves explosions
-          /shout tinytinarun - Tiny Tina loves to run.
-          /shout tffshout - Shout, Shout, Let it all out.
+          #{help_text}
         EOT
         e.respond "\n#{commands}"
       end
 
-      # TODO: refactor the switch into a config setting, so people can do arbitrary /shout thing -> sound.mp3, quip
-      # by editing a yaml file
       # TODO: enable rubocop warning when yaml refactor happens
-      # rubocop:disable Metrics/AbcSize
-      def play_shout(e, shout) # rubocop:disable Metrics/MethodLength
-        audio_file, quip = case shout
-                           when 'cena'
-                             [File.expand_path('./shout_includes/cena.mp3', __dir__),
-                              '**HIS NAME IS JOHN CENA!!!**']
-                           when 'explosions'
-                             [File.expand_path('./shout_includes/torgue-explosions.mp3', __dir__),
-                              '**EXPLOSIONS?!**']
-                           when 'tinytinarun'
-                             [File.expand_path('./shout_includes/tinytina-run.mp3', __dir__),
-                              '**Run run run run, run run run run run...**']
-                           when 'tffshout'
-                             [File.expand_path('./shout_includes/tearsforfears-shout.mp3', __dir__),
-                              '**Shout, Shout, Let it all out!**']
-                           else
-                             ['', "I don't know that one.."]
-                           end
-        e.respond quip
+      def play_shout(e, audio_file, quip)
         unless audio_file.empty?
-          voicebot = @bot.voice_connect(e.message.author.voice_channel)
-          e.voice.play_file(audio_file)
-          voicebot.destroy
+          unless @playing
+            e.respond "**#{quip}**"
+            @playing = true
+            voicebot = @bot.voice_connect(e.message.author.voice_channel)
+            e.voice.play_file(audio_file)
+            voicebot.destroy
+          end
         end
+        @playing = false
       end
 
       def add_shout_handler
         @bot.message(start_with: '/shout') do |e|
           query_msg = e.message.content.split(' ')
-          if 'help' == query_msg[1]
+          shout = query_msg[1]
+          if 'help' == shout
             shout_help(e)
           else
-            play_shout(e, query_msg[1])
+            c = @shout_config['shouts'][shout]
+            play_shout(e, File.expand_path(c['file'], __dir__), c['quip'])
           end
         end
       end
