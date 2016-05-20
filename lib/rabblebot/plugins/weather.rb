@@ -59,7 +59,7 @@ class RabbleBot
 
       # ditto about AbcSize here. If I reduce 'complexity' I also reduce clarity.
       def get_location_from_gmaps(message) # rubocop:disable Metrics/AbcSize
-        gmaps_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message}&key=#{@google_api}"
+        gmaps_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{message.join ' '}&key=#{@google_api}"
         gmaps_json_response = open(gmaps_url).read
         gmaps_json = JSON.parse(gmaps_json_response)
         location = gmaps_json['results'][0]['formatted_address']
