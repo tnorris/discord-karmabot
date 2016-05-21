@@ -42,14 +42,17 @@ class RabbleBot
       def play_shout(e, audio_file, quip)
         unless audio_file.empty?
           unless @playing
-            e.respond "**#{quip}**"
-            @playing = true
-            voicebot = @bot.voice_connect(e.message.author.voice_channel)
-            e.voice.play_file(audio_file)
-            voicebot.destroy
+            begin
+              e.respond "**#{quip}**"
+              @playing = true
+              voicebot = @bot.voice_connect(e.message.author.voice_channel)
+              e.voice.play_file(audio_file)
+              voicebot.destroy
+            ensure
+              @playing = false
+            end
           end
         end
-        @playing = false
       end
 
       def add_shout_handler

@@ -7,8 +7,7 @@ class RabbleBot
   module RabbleBotPlugin
     # so you can do /weather kbos
     class Weather < BasicPlugin
-      # methodlength probably shouldn't be enforced in the initializer..
-      def initialize(bot, config) # rubocop:disable Metrics/MethodLength
+      def initialize(bot, config)
         super(bot, config)
         begin
           @google_api = ENV.fetch('GOOGLE_API_KEY', @config[:GOOGLE_API_KEY])
