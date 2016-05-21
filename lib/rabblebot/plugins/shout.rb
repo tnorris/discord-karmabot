@@ -51,6 +51,7 @@ class RabbleBot
             ensure
               @playing = false
             end
+          end
         end
       end
 
