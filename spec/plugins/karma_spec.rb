@@ -33,4 +33,18 @@ RSpec.describe RabbleBot::RabbleBotPlugin::Karma do
     k = RabbleBot::RabbleBotPlugin::Karma.new(@bot_double, @config_double)
     expect(k.scan_decrement('tom-- tom-- tom--')).to eq(%w(tom tom tom))
   end
+
+  it 'should give a snarky message if someone tries to self-give karma' do
+    k = RabbleBot::RabbleBotPlugin::Karma.new(@bot_double, @config_double)
+    author_id = '9999'
+    thing = "<@#{author_id}>"
+    expect(k.can_give_karma_to?(author_id, thing)).to eq(false)
+  end
+
+  it 'should let users give each other karma' do
+    k = RabbleBot::RabbleBotPlugin::Karma.new(@bot_double, @config_double)
+    author_id = '9292'
+    thing = '<@9999>'
+    expect(k.can_give_karma_to?(author_id, thing)).to eq(true)
+  end
 end

@@ -121,11 +121,26 @@ class RabbleBot
       def add_increment_handler
         @bot.message(contains: '++') do |e|
           things_to_bump = scan_increment(e.message.content).map do |thing|
-            "#{thing}'s karma increased to #{deal_karma(thing, 1)}"
+            format_snarky_message(e, thing)
           end
 
           things_to_bump.each { |m| e.respond m }
         end
+      end
+
+      def format_snarky_message(event, thing)
+        if can_give_karma_to?(event.message.author.id, thing)
+          "#{thing}'s karma increased to #{deal_karma(thing, 1)}"
+        else
+          "#{event.message.author.username} you can't give karma to yourself dawg"
+        end
+      end
+
+      # lets you know if author can give karma to thing
+      # @param author [String] the author
+      # @param thing [String] the thing to check
+      def can_give_karma_to?(author, thing)
+        thing != "<@#{author}>"
       end
 
       # adds a message handler that fires on "words thing-- words words thing2--"
@@ -135,7 +150,7 @@ class RabbleBot
             "#{thing}'s karma decreased to #{deal_karma(thing, -1)}"
           end
 
-          things_to_dock.each { |m| e.respond m }
+          e.respond things_to_dock.join "\n"
         end
       end
     end
