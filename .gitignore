@@ -38,6 +38,9 @@ Thumbs.db
 
 # RabbleBot config files #
 ##########################
-
 config.yml
 *.pstore
+
+# RubyMine files #
+##################
+.idea
