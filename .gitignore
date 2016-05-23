@@ -44,3 +44,7 @@ config.yml
 # RubyMine files #
 ##################
 .idea
+
+# Ruby files #
+##############
+Gemfile.lock

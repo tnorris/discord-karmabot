@@ -1,14 +1,13 @@
-weather:
-  emojis:
-    clear-night: waxing_gibbous_moon
-    clear-day: sunny
-    partly-cloudy-night: partly_sunny
-    partly-cloudy-day: partly_sunny
-    rain: cloud_rain
-    snow: cloud_snow
-    sleet: cloud_rain
-    wind: wind_blowing_face
-    fog: foggy
-    cloudy: cloud
-    tornado: cloud_tornado
-    thunderstorm: cloud_lightning
+emojis:
+  clear-night: waxing_gibbous_moon
+  clear-day: sunny
+  partly-cloudy-night: partly_sunny
+  partly-cloudy-day: partly_sunny
+  rain: cloud_rain
+  snow: cloud_snow
+  sleet: cloud_rain
+  wind: wind_blowing_face
+  fog: foggy
+  cloudy: cloud
+  tornado: cloud_tornado
+  thunderstorm: cloud_lightning
