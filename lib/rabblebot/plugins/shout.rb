@@ -20,9 +20,8 @@ class RabbleBot
         config_file_path = File.join(File.dirname(File.expand_path(__FILE__)), '/shout_includes/shout_config.yml')
         @shout_config = YAML.load_file(config_file_path)
       rescue StandardError => e
-        # we're using STDERR.puts here because we don't have a logger yet
-        STDERR.puts "Couldn't load #{config_file_path}. Error was:"
-        STDERR.puts e
+        @bot.info "Couldn't load #{config_file_path}. Error was:"
+        @bot.info e
         raise e
       end
 
@@ -38,7 +37,6 @@ class RabbleBot
         e.respond "\n#{commands}"
       end
 
-      # TODO: enable rubocop warning when yaml refactor happens
       def play_shout(e, audio_file, quip)
         unless audio_file.empty?
           unless @playing
@@ -47,8 +45,8 @@ class RabbleBot
               @playing = true
               voicebot = @bot.voice_connect(e.message.author.voice_channel)
               e.voice.play_file(audio_file)
-              voicebot.destroy
             ensure
+              voicebot.destroy
               @playing = false
             end
           end
